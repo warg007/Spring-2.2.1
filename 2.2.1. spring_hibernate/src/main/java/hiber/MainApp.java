@@ -1,24 +1,33 @@
 package hiber;
 
 import hiber.config.AppConfig;
+import hiber.model.Car;
 import hiber.model.User;
 import hiber.service.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class MainApp {
-   public static void main(String[] args) throws SQLException {
+   public static void main(String[] args) {
       AnnotationConfigApplicationContext context = 
             new AnnotationConfigApplicationContext(AppConfig.class);
 
       UserService userService = context.getBean(UserService.class);
 
-      userService.add(new User("User1", "Lastname1", "user1@mail.ru"));
-      userService.add(new User("User2", "Lastname2", "user2@mail.ru"));
-      userService.add(new User("User3", "Lastname3", "user3@mail.ru"));
-      userService.add(new User("User4", "Lastname4", "user4@mail.ru"));
+      User roma = new User("Roma", "Pupkin", "qweqwe@mail.io");
+      User sanya = new User("Sanya", "Sidorov", "sidorov@mail.io");
+      User katy = new User("Katy", "Petrova", "petrova@mail.io");
+      User ogory = new User("Ogory", "Ivanova", "ivanova@mail.io");
+
+      Car toyota = new Car("Toyota", 200);
+      Car bmw = new Car("BMW", 325);
+      Car audi = new Car("Audi", 7);
+      Car lada = new Car("Lada", 21014);
+
+      userService.add(roma.setCar(toyota).setUser(roma));
+      userService.add(sanya.setCar(bmw).setUser(sanya));
+      userService.add(katy.setCar(audi).setUser(katy));
+      userService.add(ogory.setCar(lada).setUser(ogory));
 
       List<User> users = userService.listUsers();
       for (User user : users) {
@@ -28,6 +37,8 @@ public class MainApp {
          System.out.println("Email = "+user.getEmail());
          System.out.println();
       }
+
+      System.out.println(userService.getUserByCar("BMW", 325));
 
       context.close();
    }
